@@ -2,4 +2,7 @@
 # Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
 ################################################################################
 
-/AtlasMS/_output/netcoreapp3.0
+/MiniViewerWrapper/.vs
+/MiniViewerWrapper/MiniViewerWrapper/bin
+/MiniViewerWrapper/MiniViewerWrapper/obj
+/MiniViewerUI/build

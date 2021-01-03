@@ -1,0 +1,264 @@
+html, body, #root, #rootApp
+{
+    width: 100%;
+    height: 100%;
+    background-color: #35363C;
+}
+
+#toolbar, #playToolPanel, #miniViewerToolPanel, #imageManipToolPanel, #journalToolPanel
+{
+    display: flex;
+}
+
+#toolbar
+{
+    border-bottom: 1px solid #cacaca;    
+}
+
+#previewListPanel
+{
+    border-right: 1px solid #cacaca;    
+    height: 100%;
+    overflow-y: auto;
+}
+
+#windowLevelPanel
+{
+    border-left: 1px solid #cacaca;    
+}
+
+#imageInfoPanel
+{
+    pointer-events: none;
+}
+
+.toolButton:hover {
+    background: #47557e;
+    border: 1px solid #5b83ff;
+    border-radius: 6px;
+    opacity: 0.8;
+}
+
+.toolButton {
+    width: 40px;
+    height: 40px;
+    background: #35363c;
+    border: 1px solid #657680;
+    border-radius: 6px;
+    opacity: 0.8;
+    padding: 0px;
+}
+
+.toolButton:active {
+    opacity: 1;
+}
+
+.newToolPanel
+{
+    margin-left: 12px;
+}
+
+.sameToolPanel
+{
+    margin-left: 7px;
+}
+
+svg:hover {
+    fill: red;
+  }
+
+svg{
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(121deg) brightness(104%) contrast(101%);
+}
+
+.infoImage {    
+    background: url(../icons/info.svg);    
+  }
+.invertImage {    
+    background: url(../icons/invert.svg);    
+  }
+.rotateImage {    
+    background: url(../icons/rotate90Cw.svg);    
+  }
+.horFlipImage {    
+    background: url(../icons/flipHor.svg);    
+  }
+.vertFlipImage {    
+    background: url(../icons/flipVer.svg);    
+  }
+.undoImage {    
+    background: url(../icons/undo.svg);    
+  }
+
+.startPlayImage {    
+        background: url(../icons/play.svg);    
+      }      
+.stopPlayImage {    
+        background: url(../icons/stop.svg);    
+      }
+
+.playFirstImage{    
+    background: url(../icons/skipStart.svg);    
+  }
+.playPrevImage{    
+    background: url(../icons/rewind.svg);    
+  }
+.playNextImage{    
+    background: url(../icons/fastForward.svg);    
+  }
+.playLastImage{    
+    background: url(../icons/skipEnd.svg);    
+  }
+
+  .journalImage{    
+    background: url(../icons/group.svg);    
+  }
+
+  .hardwareImage{    
+    background: url(../icons/generator.svg);    
+  }
+
+  .miniViewerImage{    
+    background: url(../icons/server.svg);    
+  }
+
+  .settingsImage{    
+    background: url(../icons/settings.svg);    
+  }
+
+  .addUserImage{    
+    background: url(../icons/user.svg);    
+  }
+
+  .addUrgentImage{    
+    background: url(../icons/userAdd.svg);    
+  }
+
+  .previewTitle{
+      color: white;
+      border-color: black;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width:100%;
+  }
+
+  .previewTitle:active{
+    color: white;
+    border-color: white;
+}
+
+#imageInfoPanel
+{
+    color: white;
+    background-color: transparent;
+    font-size: 17px;
+}
+  
+#imagePanel > img{
+    display: block;
+    margin: 0 auto;
+}
+
+.selectedImageItem
+{
+    border: white 1px solid;
+    padding-left: 2px;
+}
+
+.dialog
+{
+    background-color: #35363C;
+}
+
+.dialogButton, .commonButton
+{
+    background-color: #35363C;
+    width: auto;
+    height: auto;
+    border: white 1px solid;
+    padding : 3px 10px;
+    border-radius: 3px;
+    color: white;
+    text-align: center;
+}
+
+.dcmList
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.tooltip span {
+	display			: none; 
+	padding			: 2px 3px; 
+	margin-left		: 8px; 
+	/* width			: 130px; */
+}
+.tooltip:hover span {
+	display			: inline; 
+	position		: absolute; 
+	background		: #ffffff; 
+	border			: 1px solid #cccccc; 
+	color			: #6c6c6c;
+}
+
+#frameRateRange
+{
+    background: #35363c;
+    border: 1px solid #657680;
+    border-radius: 6px;
+    height: 40px;
+    display: flex;
+    opacity: 0.8;
+}
+
+.hidden
+{
+  display: none !important;
+}
+
+.visible
+{
+  display: block;
+}
+
+.listbox select, .deviceTextarea{
+  background: transparent;
+    color: white;
+    border-radius: 6px;
+    padding: 6px;
+    overflow-y: auto;
+}
+
+.listbox
+{
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    width: fit-content;
+}
+
+.devicePanel
+{
+  display: flex;
+    flex-direction: column;
+    align-items:center;
+    color: white;
+    width: fit-content;
+}
+
+#deviceResponsePanel, #aprPanel
+{
+    display: flex;
+}
+
+.deviceTextarea{
+  resize: none;
+  border: 1px solid #657680;
+}

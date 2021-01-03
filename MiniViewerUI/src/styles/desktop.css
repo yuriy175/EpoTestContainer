@@ -1,0 +1,143 @@
+#rootApp
+{
+    display: grid;
+    grid-template-columns: 340px 1fr 40px;
+    grid-template-rows: 65px 1fr ; 
+    width: 100%;
+    height: 100%;
+}
+
+#toolbar {
+    grid-row: 1;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    padding: 10px 7px;
+}
+
+#hardwarePanel, #journalPanel
+{
+    grid-row: 2;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+#previewListPanel
+{
+    grid-column: 1;
+    grid-row: 2;
+}
+
+#imagePanel
+{
+    grid-column: 2;
+    grid-row: 2;  
+}
+
+#imageInfoPanel
+{
+    grid-column: 2;
+    grid-row: 2;  
+}
+
+#windowLevelPanel
+{
+    grid-column: 3;
+    grid-row: 2;  
+}
+
+.imageInfoTopLeft,
+.imageInfoBottomLeft,
+.imageInfoTopRight,
+.imageInfoBottomRight
+{
+    margin: 20px;
+    position:absolute;
+}
+
+#imageInfoPanel
+{
+    grid-column: 2;
+    grid-row: 2;  
+    position:relative;
+}
+
+.imageInfoTopLeft {
+    top:0;
+    left:0;    
+}
+.imageInfoTopRight {
+    top:0;
+    right:0;
+}
+.imageInfoBottomLeft {
+    bottom:0;
+    left:0;
+}
+.imageInfoBottomRight {
+    bottom:0;
+    right:0;
+}
+
+.dialog
+{
+    z-index: 1000;
+    position: absolute; 
+    border: white 1px solid;
+    padding : 10px 3px;
+    border-radius: 3px;
+}
+
+#selectDcmDialog
+{
+    top: calc(100% / 2);
+    left: calc(100% / 2);
+}
+
+.dcmList
+{
+    margin-bottom: 2px;
+}
+
+.radioLabel
+{
+    margin-bottom: 2px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    width:100%;
+}
+
+.listbox select{
+      min-width: 150px;
+      height: 100%;
+  }
+
+  .listbox, .devicePanel
+  {
+    margin: 12px;
+  }
+
+  .deviceTextarea{
+    min-width: 150px;
+    max-width: 250px;
+    height: 100%;
+  }
+
+  
+#hardwarePanel
+{
+    display: grid;
+    grid-template-rows: 40% 1fr ; 
+    width: 100%;
+    height: 100%;
+}
+
+#deviceResponsePanel
+{
+    grid-row: 2;
+}
+
+#aprPanel
+{
+    grid-row: 1;
+}
