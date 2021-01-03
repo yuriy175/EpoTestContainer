@@ -114,3 +114,11 @@ export async function StudyInWork(studyId) {
         return response.data;
     });
 };
+
+export async function UnBlockHigh(unBlocked) {
+    return await HandlerWrapper('UnBlockHigh', async () => {
+        const response = await axios.get(HardwareServiceAddress + DetectorsController +
+            '/UnBlockHigh?unBlocked=' + unBlocked);
+        return response.data;
+    });
+};
