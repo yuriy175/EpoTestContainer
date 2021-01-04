@@ -187,6 +187,18 @@ svg{
     text-align: center;
 }
 
+.dialogInput, .commonInput
+{
+    background-color: #35363C;
+    width: auto;
+    height: auto;
+    padding : 3px 10px;
+    border-width: 0px;
+    /* border: white 1px solid; 
+    border-radius: 3px;*/
+    color: white;
+}
+
 .dcmList
 {
     display: flex;
@@ -266,4 +278,21 @@ svg{
 #exposurePanel
 {
     border-left: 1px solid #cacaca;    
+}
+
+#addNewStudyInputs  fieldset, #addNewStudyInputs  select
+{
+  color:white;
+  margin-bottom: 16px;
+}
+
+#addNewStudyInputs  select
+{
+    background-color: #35363C;
+    width: auto;
+    height: auto;
+    border: white 1px solid;
+    padding : 3px 10px;
+    border-radius: 3px;
+    color: white;
 }

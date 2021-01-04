@@ -6,6 +6,7 @@ import { useChat } from '../chats/useChat'
 
 import { AcquireChatName } from '../context/constants'
 import { StateContext } from '../context/state-context';
+import { JournalContext } from '../context/journal-context';
 
 import ListBox from './commonComponents/ListBox'
 import DevicePanel from './hardwareComponents/DevicePanel'
@@ -14,10 +15,15 @@ import DialogButton from './dialogs/dialogComponents/DialogButton'
 import AcquireChat from '../chats/acquireChat';
 
 export default function HardwarePanel(props) {
+    const defaultWorkStation = 1;
+    const defaultAgeGroup = 6;
+
     const [stateState] = useContext(StateContext);
     const [hardwareState, hardwareDispatch] = useContext(HardwareContext);
+    const [journalState, journalDispatch] = useContext(JournalContext);
     const [currentAprs, setCurrentAprs] = useState([]);
     const [currentProjs, setCurrentProjs] = useState([]);
+    const [currentRoi, setCurrentRoi] = useState('');
     const [currentProj, setCurrentProj] = useState('');
     const [currentApr, setCurrentApr] = useState('');
     const [currentDir, setCurrentDir] = useState('');
@@ -63,9 +69,29 @@ export default function HardwarePanel(props) {
 
     }, [hardwareState.workStations]);
 
-    const OnRoi = async (elem, ev) => {
-        const select = ev.target;
-        const val = select.options[select.selectedIndex].value;
+    useEffect(() => {
+        (async () => {
+            if (journalState.studyInWork?.id) {
+                const studyName = journalState.studyInWork.name;
+                const apr = await HardwareWorker.GetDefaultOrganAuto(
+                    currentWs ?? defaultWorkStation,
+                    defaultAgeGroup,
+                    studyName);
+
+                const roi = hardwareState.rois.filter(r => r.name === apr.roi)[0];
+                if (roi) {
+                    await LoadAprs(roi.id);
+                }
+
+                if (studyName) {
+                    await LoadProjs(studyName);
+                }
+            }
+        })();
+
+    }, [journalState.studyInWork]);
+
+    const LoadAprs = async (val) => {
         let aprs = hardwareState.aprs.filter(a => a.roi === val);
         if (!aprs || aprs.length === 0) {
             aprs = await HardwareWorker.LoadOrganAutosByRoiId(val);
@@ -77,12 +103,17 @@ export default function HardwarePanel(props) {
             aprs = aprs[0].aprs;
         }
 
+        setCurrentRoi(val);
         setCurrentAprs(aprs?.map(a => a.name) ?? []);
     }
 
-    const OnApr = async (elem, ev) => {
+    const OnRoi = async (elem, ev) => {
         const select = ev.target;
         const val = select.options[select.selectedIndex].value;
+        await LoadAprs(val);
+    }
+
+    const LoadProjs = async (val) => {
         let projs = hardwareState.projs.filter(a => a.apr === val);
         if (!projs || projs.length === 0) {
             projs = await HardwareWorker.LoadProjectionsByOrganAutoName(val);
@@ -98,6 +129,12 @@ export default function HardwarePanel(props) {
         setCurrentProjs(projs ?? []);
         setCurrentProj('');
         setCurrentDir('');
+    }
+
+    const OnApr = async (elem, ev) => {
+        const select = ev.target;
+        const val = select.options[select.selectedIndex].value;
+        await LoadProjs(val);
     }
 
     const OnProj = async (elem, ev) => {
@@ -180,10 +217,10 @@ export default function HardwarePanel(props) {
             <div id="aprPanel" className={props.className}>
                 <ListBox name='ROI' items={hardwareState.rois?.map(r => {
                     return { name: r.name, val: r.id };
-                })} onSelect={OnRoi}></ListBox>
+                })} onSelect={OnRoi} selectedIndex={currentRoi}></ListBox>
                 <ListBox name='Organ autos' items={currentAprs?.map(a => {
                     return { name: a, val: a };
-                })} onSelect={OnApr}></ListBox>
+                })} onSelect={OnApr} selectedIndex={currentApr}></ListBox>
                 <ListBox name='Projections' items={projNames?.map(p => {
                     return { name: p, val: p };
                 })} onSelect={OnProj}></ListBox>

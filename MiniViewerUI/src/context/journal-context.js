@@ -22,6 +22,9 @@ function reducer(state, action) {
         studyInWork: action.payload
       };
     }
+    case 'CLEARSTUDYINWORK': {
+      return initialState;
+    }    
     default:
       throw new Error();
   }

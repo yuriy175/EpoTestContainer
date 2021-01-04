@@ -7,12 +7,15 @@ import ImageViewerToolPanel from './toolbarComponents/ImageViewerToolPanel'
 import JournalToolPanel from './toolbarComponents/JournalToolPanel'
 
 import { StateContext } from '../context/state-context';
+import { JournalContext } from '../context/journal-context';
 
 export default function ToolbarBar() {
 
   const [stateState, stateDispatch] = useContext(StateContext);
+  const [journalState, journalDispatch] = useContext(JournalContext);
 
   const onJournal = async (ev) => {
+    journalDispatch({ type: 'CLEARSTUDYINWORK', payload: true });
     stateDispatch({ type: 'SETAPPMODE', payload: AppModeJournal });
   }
 

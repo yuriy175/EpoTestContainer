@@ -12,7 +12,7 @@ export default function JournalToolPanel() {
   const getPatient = (name, birthdate) => {
     return {
       surname: name,
-      birthDate: birthdate,
+      birthDate: birthdate //? null : new Date(birthdate),
     }
   }
 
@@ -24,8 +24,8 @@ export default function JournalToolPanel() {
     }
   }
 
-  const onAddUser = async (userName, birthdate, studyName) => {
-    const patient = getPatient(userName, birthdate);
+  const onAddUser = async ({ userName, birthdate, studyName }) => {
+    const patient = getPatient(userName ?? 'Vaska', birthdate);
     patient.id = await Worker.AddPatient(patient);
     if (!patient.id) {
       return;
@@ -43,23 +43,34 @@ export default function JournalToolPanel() {
   }
 
   const onAddStudy = async (study) => {
-    await onAddUser('Vaska');
+    await onAddUser(study);
   }
 
   const onAddUrgent = async () => {
-    await onAddUser('Urgent');
+    await onAddUser({ userName: 'Urgent' });
   }
 
   const handleAddNewStudyClose = async () => {
     setAddNewStudyOpen(false);
   };
 
+  const onLastStudy = async () => {
+    const studyId = journalState.studies ?
+      Math.max(...journalState.studies.map(s => s.id)) :
+      null;
+    if (studyId) {
+      const study = journalState.studies.filter(s => s.id === studyId)[0];
+      journalDispatch({ type: 'SETSTUDYINWORK', payload: study });
+    }
+  }
+
   return (
     <div id="journalToolPanel">
       <ToolButton btnClass="newToolPanel" svgClass="addUserImage" onClick={handleAddNewStudyOpen} title="add study to named user" />
       <ToolButton btnClass="sameToolPanel" svgClass="addUrgentImage" onClick={onAddUrgent} title="add study to urgent user" />
+      <ToolButton btnClass="sameToolPanel" svgClass="addUrgentImage" onClick={onLastStudy} title="get last study to work" />
       {addNewStudyOpen ?
-        <AddNewStudyDialog onAdd={handleAddNewStudyClose} onClose={handleAddNewStudyClose}></AddNewStudyDialog> :
+        <AddNewStudyDialog onAdd={onAddStudy} onClose={handleAddNewStudyClose}></AddNewStudyDialog> :
         <div />}
     </div>
   );
