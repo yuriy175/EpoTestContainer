@@ -10,6 +10,7 @@ import { JournalContext } from '../context/journal-context';
 
 import ListBox from './commonComponents/ListBox'
 import DevicePanel from './hardwareComponents/DevicePanel'
+import ExposurePanel from './hardwareComponents/ExposurePanel'
 import DialogButton from './dialogs/dialogComponents/DialogButton'
 
 import AcquireChat from '../chats/acquireChat';
@@ -246,8 +247,7 @@ export default function HardwarePanel(props) {
                 <DevicePanel name='Stand' info={standState} onGetState={onGetStandState}></DevicePanel>
                 <DevicePanel name='Ecp' info={ecpState}></DevicePanel>
             </div>
-            <div id="exposurePanel" className={props.className}>
-            </div>
+            <ExposurePanel />
         </div>
     );
 }
