@@ -8,11 +8,9 @@ import * as Worker from '../../workers/miniViewerWorker'
 
 export default function MiniViewerToolPanel() {
   const [imageState, imageDispatch] = useContext(ImageContext);
-  const [open, setOpen] = React.useState(false);
   const [selectDcmOpen, setSelectDcmOpen] = React.useState(false);  
   const [dump, setDump] = React.useState('');
-  //'data:image/bmp;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==');
-
+  
   const handleSelectDcmClose = async () => {
     setSelectDcmOpen(false);
   };

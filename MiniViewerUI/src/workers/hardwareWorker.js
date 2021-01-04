@@ -122,3 +122,11 @@ export async function UnBlockHigh(unBlocked) {
         return response.data;
     });
 };
+
+export async function GetExaminationNames() {
+    return await HandlerWrapper('GetExaminationNames', async () => {
+        const response = await axios.get(HardwareServiceAddress + OrganAutoController +
+            '/GetExaminationNames');
+        return response.data;
+    });
+};

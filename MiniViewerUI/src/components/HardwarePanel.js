@@ -209,6 +209,8 @@ export default function HardwarePanel(props) {
                 <DevicePanel name='Stand' info={standState} onGetState={onGetStandState}></DevicePanel>
                 <DevicePanel name='Ecp' info={ecpState}></DevicePanel>
             </div>
+            <div id="exposurePanel" className={props.className}>
+            </div>
         </div>
     );
 }

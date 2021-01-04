@@ -262,3 +262,8 @@ svg{
   resize: none;
   border: 1px solid #657680;
 }
+
+#exposurePanel
+{
+    border-left: 1px solid #cacaca;    
+}

@@ -8,6 +8,7 @@ const initialState = {
   projs: [],
   currentApr: { apr: '', proj: '', dir: '' },
   workStations: [],
+  examinationNames: [],
 };
 
 function reducer(state, action) {
@@ -34,6 +35,12 @@ function reducer(state, action) {
       return {
         ...state,
         workStations: action.payload
+      };
+    }
+    case 'SETEXAMINATIONNAMES': {
+      return {
+        ...state,
+        examinationNames: action.payload
       };
     }
     default:
