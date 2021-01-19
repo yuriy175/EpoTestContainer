@@ -106,6 +106,9 @@ export default function HardwarePanel(props) {
 
         setCurrentRoi(val);
         setCurrentAprs(aprs?.map(a => a.name) ?? []);
+        setCurrentProjs([]);
+        setCurrentProj('');
+        setCurrentDir('');
     }
 
     const OnRoi = async (elem, ev) => {
@@ -143,8 +146,11 @@ export default function HardwarePanel(props) {
         const val = select.options[select.selectedIndex].value;
 
         setCurrentProj(val);
-        setCurrentDir('');
-        onGetApr();
+        
+        var dirs = currentProjs.filter(p => p.projection.value === val)?.map(p => p.direction.value);
+        const dir = dirs.length === 0? '' : dirs[0];
+        setCurrentDir(dir);
+        onGetApr(currentApr, val,  dir, currentWs);
     }
 
     const OnDir = async (elem, ev) => {
@@ -152,7 +158,7 @@ export default function HardwarePanel(props) {
         const val = select.options[select.selectedIndex].value;
 
         setCurrentDir(val);
-        onGetApr();
+        onGetApr(currentApr, currentProj, val, currentWs);
     }
 
     const OnWs = async (elem, ev) => {
@@ -166,12 +172,12 @@ export default function HardwarePanel(props) {
             await HardwareWorker.ChangeLogicalWorkStation(val);
         }
 
-        setCurrentWs(val);
+        setCurrentWs(currentApr, currentProj, currentDir, val);
     }
 
-    const onGetApr = async () => {
-        if (currentApr && currentProj && currentWs) {
-            await HardwareWorker.GetOrganAutos(currentApr, currentProj, currentDir, currentWs);
+    const onGetApr = async (apr, proj, dir, ws) => {
+        if (apr && proj && ws) {
+            await HardwareWorker.GetOrganAutos(apr, proj, dir, ws);
         }
     }
 
@@ -192,6 +198,8 @@ export default function HardwarePanel(props) {
 
     const onEcpChanged = async (info) => {
         setEcpState(info);
+        info.projection && setCurrentProj(info.projection);
+        info.direction && setCurrentDir(info.direction);
     }
 
     const onCollimatorChanged = async (info) => {
@@ -224,10 +232,10 @@ export default function HardwarePanel(props) {
                 })} onSelect={OnApr} selectedIndex={currentApr}></ListBox>
                 <ListBox name='Projections' items={projNames?.map(p => {
                     return { name: p, val: p };
-                })} onSelect={OnProj}></ListBox>
+                })} onSelect={OnProj} selectedIndex={currentProj}></ListBox>
                 <ListBox name='Directions' items={dirNames?.map(p => {
                     return { name: p, val: p };
-                })} onSelect={OnDir}></ListBox>
+                })} onSelect={OnDir} selectedIndex={currentDir}></ListBox>
                 {/* <DialogButton caption="Set Apr" onClick={onGetApr} /> */}
                 <ListBox name='Workstations' items={hardwareState.workStations?.map(w => {
                     return { name: w.uniqueName, val: w.id };
