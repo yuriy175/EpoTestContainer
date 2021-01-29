@@ -75,17 +75,17 @@ export default function ImagePanel(props) {
     const offsetY = ev.screenY - initialRightPos.y;
 
     console.log(`OnOffsetChanged ${offsetX} ${offsetY}`);
-    if (isViewerState) {      
+    if (isViewerState) {
     }
     else {
-      
+
       await ImageManipWorker.MoveImage(
         imageState.imageInfo.DicomUid,
         offsetX,
         -offsetY,
         imageState.imageInfo.Id);
 
-        console.log(`OnOffsetChanged complete`);
+      console.log(`OnOffsetChanged complete`);
 
       /*if (wlRef) {
         const windowCenter = wlRef.current.WindowCenter - deltaCenter * 10;
@@ -193,6 +193,41 @@ export default function ImagePanel(props) {
     })();
 
   }, [stageCanvasRef]);
+
+  useEffect(() => {
+    (async () => {
+      // if (printState.printedImage && imageRef) {
+      //     imageRef.current.src = printState.printedImage;
+      // }
+      if (!imageState.imageInfo) {
+        return;
+      }
+
+      const imageProps = {
+        Bits: 8,
+        Width: 1000,
+        Height: 1000,
+        IsLandscape: true,
+        ShowAttributes: true,
+        PrintableImageViewModels: [
+          {
+            ImageId: imageState.imageInfo.Id,
+            ImageUid: imageState.imageInfo.DicomUid,
+            SaveImage: {
+              DisplayOffsetX: 500,
+              DisplayOffsetY: 500,
+              Scale: zoomRef.current
+            }
+          }
+        ]
+      }
+      const printedImage = await ImageManipWorker.GetPrintableImage(imageProps);
+      if (printedImage && imageRef) {
+        imageRef.current.src = printedImage;
+      }
+    })();
+
+  }, [printState.printedImage]);
 
   return (
     <div id="imagePanel" ref={stageCanvasRef} className={props.className}>

@@ -3,7 +3,7 @@ import React, { useReducer, createContext } from 'react';
 export const PrintContext = createContext();
 
 const initialState = {
-  printedImage: null,
+  printedImage: 0,
 };
 
 function reducer(state, action) {
@@ -11,7 +11,7 @@ function reducer(state, action) {
     case 'SETPRINTEDIMAGE': {
       return {
         ...state,
-        printedImage: action.payload
+        printedImage: state.printedImage + 1//action.payload
       };
     }
     default:
