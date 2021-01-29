@@ -62,9 +62,8 @@ export default function HardwarePanel(props) {
                 const ws = await HardwareWorker.GetLogicalWorkstations();
                 if (ws) {
                     hardwareDispatch({ type: 'SETWS', payload: ws.filter(w => w.isVisible) });
+                    setCurrentWs(ws[0]?.id);
                 }
-
-                setCurrentWs(ws[0]?.id);
             }
         })();
 
