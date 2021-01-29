@@ -99,3 +99,14 @@ export async function GetPrintableImage(imageProps) {
         return response.data;
     });
 };
+
+export async function InvertImage(imageUid, inverted, imageId = null, multiFrameNumber = null) {
+    return await HandlerWrapper('InvertImage', async () => {
+        const response = await axios.post(ImageManipulationServiceAddress + ImageManipulationController + 
+            '/InvertImage?imageId=' + (imageId ?? '')
+            + '&imageUid=' + imageUid 
+            + '&inverted='+ inverted
+            + '&multiFrameNumber=' + (multiFrameNumber ?? ''));
+        return response;
+    });
+};
