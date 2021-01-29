@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import * as signalR from '@microsoft/signalr';
 
 import { useChat } from '../chats/useChat'
+import { AppModeJournal, AppModeHardware, AppModeMiniViewer, AppModeImage } from '../context/constants'
 
 import { ImageChatName } from '../context/constants'
 import { StateContext } from '../context/state-context';
+import { ImageContext } from '../context/image-context';
+import { PrintContext } from '../context/print-context';
 
 import * as MiniViewerWorker from '../workers/miniViewerWorker'
 import * as ImageManipWorker from '../workers/imageWorker'
@@ -13,12 +16,17 @@ export default function ImagePanel(props) {
   console.log('ImagePanel');
 
   const [stateState] = useContext(StateContext);
+  const [imageState] = useContext(ImageContext);
+  const [printState] = useContext(PrintContext);
   //const [miniViewerConnection, setMiniViewerConnection] = useState(null);
   //const [imageManipConnection, setImageManipConnection] = useState(null);
   const usingMouse = useRef(false);
   const imageRef = useRef(null);
   const stageCanvasRef = useRef(null);
+  const wlRef = useRef(null);
+  const zoomRef = useRef(1);
 
+  const isViewerState = stateState.appMode === AppModeMiniViewer;
 
   let initialRightPos = { x: 0, y: 0 };
   let initialLeftPos = { x: 0, y: 0 };
@@ -35,10 +43,64 @@ export default function ImagePanel(props) {
       initialRightPos = { x: initialRightPos.x, y: ev.screenY };
     }
 
-    if (deltaCenter || deltaWidth) {
+    if (!deltaCenter && !deltaWidth) {
+      return;
+    }
+    if (isViewerState) {
       await MiniViewerWorker.SetImageWindowLevel(
         deltaCenter ? deltaCenter > 0 : null,
         deltaWidth ? deltaWidth > 0 : null);
+    }
+    else {
+      if (wlRef) {
+        const windowCenter = wlRef.current.WindowCenter - deltaCenter * 10;
+        const windowWidth = wlRef.current.WindowWidth - deltaWidth * 10;
+        wlRef.current = {
+          WindowCenter: windowCenter < 1 ? 1 : windowCenter,
+          WindowWidth: windowWidth < 1 ? 1 : windowWidth,
+        };
+
+        await ImageManipWorker.SetViewRange(
+          imageState.imageInfo.DicomUid,
+          wlRef.current.WindowWidth,
+          wlRef.current.WindowCenter,
+          imageState.imageInfo.Id);
+      }
+    }
+  }
+
+  const OnOffsetChanged = async (ev) => {
+    const changeLimitValue = 30;
+    const offsetX = ev.screenX - initialRightPos.x;
+    const offsetY = ev.screenY - initialRightPos.y;
+
+    console.log(`OnOffsetChanged ${offsetX} ${offsetY}`);
+    if (isViewerState) {      
+    }
+    else {
+      
+      await ImageManipWorker.MoveImage(
+        imageState.imageInfo.DicomUid,
+        offsetX,
+        -offsetY,
+        imageState.imageInfo.Id);
+
+        console.log(`OnOffsetChanged complete`);
+
+      /*if (wlRef) {
+        const windowCenter = wlRef.current.WindowCenter - deltaCenter * 10;
+        const windowWidth = wlRef.current.WindowWidth - deltaWidth * 10;
+        wlRef.current = {
+          WindowCenter: windowCenter < 1 ? 1 : windowCenter,
+          WindowWidth: windowWidth < 1 ? 1 : windowWidth,
+        };
+
+        await ImageManipWorker.SetViewRange(
+          imageState.imageInfo.DicomUid,
+          wlRef.current.WindowWidth,
+          wlRef.current.WindowCenter,
+          imageState.imageInfo.Id);
+      }*/
     }
   }
 
@@ -47,10 +109,21 @@ export default function ImagePanel(props) {
       usingMouse.current = true;
       console.log('preWheel');
       const delta = Math.sign(ev.deltaY);
-      await (delta < 0 ? MiniViewerWorker.ScaleDown() : MiniViewerWorker.ScaleUp());
-      console.log('postWheel');
-      usingMouse.current = false;
+      if (isViewerState) {
+        await (delta < 0 ? MiniViewerWorker.ScaleDown() : MiniViewerWorker.ScaleUp());
+      }
+      else {
+        const zoom = zoomRef.current + delta * 0.1;
+        zoomRef.current = zoom < 0.5 ? 0.5 : zoom > 5 ? 5 : zoom;
+        await ImageManipWorker.ZoomImage(
+          imageState.imageInfo.DicomUid,
+          zoomRef.current,
+          imageState.imageInfo.Id);
+      }
     }
+
+    console.log('postWheel');
+    usingMouse.current = false;
   }
 
   const handleMouseMove = async (ev) => {
@@ -58,10 +131,11 @@ export default function ImagePanel(props) {
       usingMouse.current = true;
       ev.preventDefault()
 
-      if (ev.buttons & 1 || (ev.buttons === undefined && ev.which == 1)) {
-        console.log('left button pressed');
+      if (ev.buttons & 1 || (ev.buttons === undefined && EventSource.which == 3)) {
+        await OnOffsetChanged(ev);
       } else if (ev.buttons & 2 || (ev.buttons === undefined && EventSource.which == 3)) {
-        await OnWLChanged(ev);
+        //await OnWLChanged(ev);
+        await OnOffsetChanged(ev);
       }
 
       usingMouse.current = false;
@@ -99,6 +173,11 @@ export default function ImagePanel(props) {
         if (imageRef) {
           imageRef.current.src = data.ImageData;
         }
+
+        wlRef.current = {
+          WindowCenter: data.WindowCenter,
+          WindowWidth: data.WindowWidth
+        };
       }
     }
   );

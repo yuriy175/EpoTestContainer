@@ -9,6 +9,7 @@ import { StateContextProvider } from './context/state-context';
 import { FrameInfoContextProvider } from './context/frameInfo-context';
 import { HardwareContextProvider } from './context/hardware-context';
 import { JournalContextProvider } from './context/journal-context';
+import { PrintContextProvider } from './context/print-context';
 
 ReactDOM.render(
   <StateContextProvider>
@@ -16,9 +17,11 @@ ReactDOM.render(
       <ImageContextProvider>
         <FrameInfoContextProvider>
           <HardwareContextProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
+            <PrintContextProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </PrintContextProvider>
           </HardwareContextProvider>
         </FrameInfoContextProvider>
       </ImageContextProvider>
