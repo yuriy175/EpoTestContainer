@@ -28,8 +28,8 @@ export default function ExposurePanel(props) {
             }
             const fields = await HardwareWorker.GetDetectorFields();
             if (fields) {
-                setDetectorFields(fields);
-                setCurrentDetectorField(fields[0]);
+                setDetectorFields(fields[0]?.fields);
+                setCurrentDetectorField(fields[0]?.fields[0].shape);
             }
         })();
     }, []);
@@ -71,7 +71,7 @@ export default function ExposurePanel(props) {
             })} onSelect={OnCollFilter} selectedIndex={currentCollFilter}></ComboBox>
 
             <ComboBox name='Detector Fields' items={detectorFields?.map(r => {
-                return { name: r.name, val: r.id };
+                return { name: r.shape, val: r.index };
             })} onSelect={OnDetectorField} selectedIndex={currentDetectorField}></ComboBox>
 
             <ComboBox name='Stand Positions' items={standPositions?.map(r => {
