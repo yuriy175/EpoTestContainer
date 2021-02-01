@@ -147,3 +147,19 @@ export async function MakeShot() {
         return response.data;
     });
 };
+
+export async function GetCollimatorFilters() {
+    return await HandlerWrapper('GetCollimatorFilters', async () => {
+        const response = await axios.get(HardwareServiceAddress + ExpositionController +
+            '/GetCollimatorFilters');
+        return response.data;
+    });
+};
+
+export async function GetDetectorFields() {
+    return await HandlerWrapper('GetDetectorFields', async () => {
+        const response = await axios.get(HardwareServiceAddress + DetectorsController +
+            '/GetDetectorFields');
+        return response.data;
+    });
+};

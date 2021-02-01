@@ -243,7 +243,7 @@ svg{
   display: block;
 }
 
-.listbox select, .deviceTextarea{
+.listbox select, .combobox select, .deviceTextarea{
   background: transparent;
     color: white;
     border-radius: 6px;
@@ -251,7 +251,11 @@ svg{
     overflow-y: auto;
 }
 
-.listbox
+.combobox select option{
+  background: #35363C;
+}
+
+.listbox, .combobox
 {
   display: flex;
     flex-direction: column;
