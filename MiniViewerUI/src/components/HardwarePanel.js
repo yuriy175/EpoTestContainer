@@ -203,7 +203,7 @@ export default function HardwarePanel(props) {
             ...ecpState,
             projection: info.projection ?? ecpState.projection,
             direction: info.direction ?? ecpState.direction,
-            position_Select: info.position_Select.opted ?? ecpState.position_Select,
+            position_Select: info.position_Select?.opted ?? ecpState.position_Select,
         });
         info.projection && setCurrentProj(info.projection);
         info.direction && setCurrentDir(info.direction);
