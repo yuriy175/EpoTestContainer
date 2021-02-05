@@ -12,7 +12,7 @@ const initialState = {
   journalServiceUrl: 'http://localhost:5002',
   hardwareServiceUrl: 'http://localhost:5007',
   imageServiceUrl: 'http://localhost:5007',
-  appMode: AppModeImage, //AppModeHardware, // AppModeJournal,
+  appMode: AppModeHardware, //AppModeImage, // AppModeJournal,
 };
 
 function reducer(state, action) {

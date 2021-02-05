@@ -18,7 +18,7 @@ const DevicePanel = React.memo((props) => {
         <div className='devicePanel'>
             <label>{props.name}</label>    
             <label>Status: {state}</label>
-            <textarea className='deviceTextarea' readonly="readonly" type='text' value={info}>{props.info}</textarea>        
+            <textarea className='deviceTextarea' readOnly="readonly" type='text' value={info}>{props.info}</textarea>        
             {props.onGetState && <CommonButton caption="Get State" onClick={props.onGetState} />}
         </div>
     );

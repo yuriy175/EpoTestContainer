@@ -10,14 +10,14 @@ export default function ExposurePanel(props) {
     const [collFilters, setCollFilters] = useState([]);
     const [detectorFields, setDetectorFields] = useState([]);
     const [currentCollFilter, setCurrentCollFilter] = useState('');
-    const [currentDetectorField, setCurrentDetectorField] = useState('');
+    const [currentDetectorField, setCurrentDetectorField] = useState({});
 
     const [standPositions] = useState([
         { index: 1, name: 'table_horizontal' },
         { index: 2, name: 'table_vertical' },
     ]);
 
-    const [currentStandPosition, setStandPosition] = useState(standPositions[0].name);
+    const [currentStandPosition, setStandPosition] = useState(standPositions[0]);
 
     useEffect(() => {
         (async () => {
@@ -29,7 +29,7 @@ export default function ExposurePanel(props) {
             const fields = await HardwareWorker.GetDetectorFields();
             if (fields) {
                 setDetectorFields(fields[0]?.fields);
-                setCurrentDetectorField(fields[0]?.fields[0].shape);
+                setCurrentDetectorField(fields[0]?.fields[0]);
             }
         })();
     }, []);
@@ -49,21 +49,35 @@ export default function ExposurePanel(props) {
     const OnCollFilter = async (elem, ev) => {
         const select = ev.target;
         const val = select.options[select.selectedIndex].value;
-        //await LoadAprs(val);
+        await HardwareWorker.SetCollimatorFilter(val);
     }
 
     const OnDetectorField = async (elem, ev) => {
         const select = ev.target;
         const val = select.options[select.selectedIndex].value;
-        //await LoadAprs(val);
+        await HardwareWorker.SetDetectorFields(val);
     }
 
     const OnStandPosition = async (elem, ev) => {
         const select = ev.target;
         const val = select.options[select.selectedIndex].value;
-        //await LoadAprs(val);
+        await HardwareWorker.SetStandPosition(val);
     }
 
+    const propsDetectorField = props.detectorField === 0? detectorFields[0].index : props.detectorField;
+    if (propsDetectorField !== undefined && propsDetectorField !== currentDetectorField.index) {
+        const fields = detectorFields.filter(d => d.index === propsDetectorField);
+        const detectorField = (fields.length === 0 ? detectorFields : fields)[0];
+        setCurrentDetectorField(detectorField);
+    }
+
+    const propsStandPosition = props.standPosition;
+    if (propsStandPosition !== undefined && propsStandPosition !== currentStandPosition.index) {
+        const positions = standPositions.filter(d => d.index === propsStandPosition);
+        const standPosition = (positions.length === 0 ? standPositions : positions)[0];
+        setStandPosition(standPosition);
+    }
+    
     return (
         <div id='exposurePanel'>
             <ComboBox name='Collimator Filters' items={collFilters?.map(r => {
@@ -72,11 +86,11 @@ export default function ExposurePanel(props) {
 
             <ComboBox name='Detector Fields' items={detectorFields?.map(r => {
                 return { name: r.shape, val: r.index };
-            })} onSelect={OnDetectorField} selectedIndex={currentDetectorField}></ComboBox>
+            })} onSelect={OnDetectorField} selectedIndex={currentDetectorField.index}></ComboBox>
 
             <ComboBox name='Stand Positions' items={standPositions?.map(r => {
                 return { name: r.name, val: r.index };
-            })} onSelect={OnStandPosition} selectedIndex={currentStandPosition}></ComboBox>
+            })} onSelect={OnStandPosition} selectedIndex={currentStandPosition.index}></ComboBox>
 
             <CommonButton caption="Make Shot" onClick={onMakeShot} />
             <CommonButton caption="Make Series" onClick={onMakeSeries} />

@@ -34,9 +34,9 @@ export default function HardwarePanel(props) {
     const [generatorState, setGeneratorState] = useState('');
     const [dosimeterState, setDosimeterState] = useState('');
     const [collimatorState, setCollimatorState] = useState('');
-    const [detectorState, setDetectorState] = useState('');
+    const [detectorState, setDetectorState] = useState({});
     const [standState, setStandState] = useState('');
-    const [ecpState, setEcpState] = useState('');
+    const [ecpState, setEcpState] = useState({});
 
     console.log('! render HardwarePanel');
 
@@ -145,11 +145,11 @@ export default function HardwarePanel(props) {
         const val = select.options[select.selectedIndex].value;
 
         setCurrentProj(val);
-        
+
         var dirs = currentProjs.filter(p => p.projection.value === val)?.map(p => p.direction.value);
-        const dir = dirs.length === 0? '' : dirs[0];
+        const dir = dirs.length === 0 ? '' : dirs[0];
         setCurrentDir(dir);
-        onGetApr(currentApr, val,  dir, currentWs);
+        onGetApr(currentApr, val, dir, currentWs);
     }
 
     const OnDir = async (elem, ev) => {
@@ -188,7 +188,10 @@ export default function HardwarePanel(props) {
     }
 
     const onDetectorChanged = async (info) => {
-        setDetectorState(info);
+        setDetectorState({
+            ...detectorState,
+            detectorField: info.detectorField ?? detectorState.detectorField,
+        });
     }
 
     const onStandChanged = async (info) => {
@@ -196,9 +199,17 @@ export default function HardwarePanel(props) {
     }
 
     const onEcpChanged = async (info) => {
-        setEcpState(info);
+        setEcpState({
+            ...ecpState,
+            projection: info.projection ?? ecpState.projection,
+            direction: info.direction ?? ecpState.direction,
+            position_Select: info.position_Select.opted ?? ecpState.position_Select,
+        });
         info.projection && setCurrentProj(info.projection);
         info.direction && setCurrentDir(info.direction);
+        if (info.position_Select) {
+            await HardwareWorker.SetStandPosition(info.position_Select.opted);
+        }
     }
 
     const onCollimatorChanged = async (info) => {
@@ -254,7 +265,7 @@ export default function HardwarePanel(props) {
                 <DevicePanel name='Stand' info={standState} onGetState={onGetStandState}></DevicePanel>
                 <DevicePanel name='Ecp' info={ecpState}></DevicePanel>
             </div>
-            <ExposurePanel />
+            <ExposurePanel detectorField={detectorState.detectorField} standPosition={ecpState.position_Select}/>
         </div>
     );
 }

@@ -163,3 +163,29 @@ export async function GetDetectorFields() {
         return response.data;
     });
 };
+
+///
+export async function SetStandPosition(position) {
+    return await HandlerWrapper('SetStandPosition', async () => {
+        const response = await axios.post(HardwareServiceAddress + ExpositionController +
+            '/SetStandPosition?position=' + position);
+        return response.data;
+    });
+};
+
+
+export async function SetCollimatorFilter(filter) {
+    return await HandlerWrapper('SetCollimatorFilter', async () => {
+        const response = await axios.post(HardwareServiceAddress + ExpositionController +
+            '/SetCollimatorFilter?filter=' + filter);
+        return response.data;
+    });
+};
+
+export async function SetDetectorFields(fieldIndex) {
+    return await HandlerWrapper('SetDetectorFields', async () => {
+        const response = await axios.post(HardwareServiceAddress + DetectorsController +
+            '/SetDetectorFields?fieldIndex=' + fieldIndex);
+        return response.data;
+    });
+};
